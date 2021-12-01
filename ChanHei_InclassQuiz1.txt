@@ -1,0 +1,40 @@
+// Chan Hei
+// Nov 30
+// In class short quiz 1
+
+[1] Convert following decimal numbers to binary numbers(15pts)
+
+-> 5.75 = 5 + 0.75 = 4 + 1 + 0.5 + 0.25 = 0100 + 0001 + 0.1 + 0.01 = 101.11
+-> 63/64 = 0.111111
+-> 9.8125 = 8 + 1 + 0.5 + 0.25 + 0 + 0.0625 = 1000 + 0001 + 0.1 + 0.01 + 0.0001 = 1001.1101
+
+[2] Convert the 34.890625 into the IEEE 754 floating-point representation(15pts)
+
+It's positive so the sign is 0
+
+34 = 32 + 2 = 10010
+.890625 = 0.5 + 0.25 + 0.125 + 0.015625 = .111001
+
+34.890625 = 10010.111001 = 1.0010111001 * 2^5
+
+sign = 0
+exponent = 5 = 0101
+mantissa = 0010111001
+
+34.890625 = 0 00000101 00101110010000000000000000000000
+
+[3] The following number is the IEEE 754 floating-point representation. Convert the binary number to the decimal number(15 pts)
+
+sign = 0, it's positive
+exponent = 123
+biased exponent = 123 - 127 = -4
+Mantissa is 0
+
+Answer = 1*2^-4
+
+[4] Explain the definition of denormalized number and show the largest denormalized number and the smallest normalized number(for the positive numbers). 15 pts
+
+A denormalized number is a number that has it's exponent field is all 0 but the fraction side is not all 0.
+
+largest denormalized number = 0.1111111111*2^-14 = 0 00000 0000000001
+smallest normalized number = 1 * 2^-14 = 0 01111 0000000000
