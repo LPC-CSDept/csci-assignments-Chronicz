@@ -3,6 +3,16 @@
 # Nov 27
 # Quiz Question 3
 # Calculate Newton's Method
+#
+# Description:
+# Initiate the value of n and load it into a float register
+# Initiate x = 1
+# Load 2 for division
+# use a temp as n to do the test
+# Get the difference between x and x'
+# if x'- x < 0.00001 branch to end and print result
+# else loop again
+#
 # Start
 
 	.data
@@ -15,8 +25,8 @@ lf:	.asciiz	"\n"
 	.globl main
 
 main:	l.s	$f1, n			# Load n
-	li.s	$f2, 1.0		# x = 1...N
-	li.s	$f3, 2.0		# 2 for division
+	li.s	$f2, 1.0		# Load x = 1
+	li.s	$f3, 2.0		# Load 2 for division
 	li.s	$f10, 1.0e-5		# limit
 	
 loop:	mov.s	$f4, $f1		# create temp($f5) = n ($f1)

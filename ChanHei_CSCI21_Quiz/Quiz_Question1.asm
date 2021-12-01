@@ -3,6 +3,13 @@
 # Nov 27
 # Quiz Question 1
 # Converting from Fahrenheit to Celsius
+#
+# Description:
+# Print prompt
+# Get user input in Farenheit and convert into float value and store it in a float register
+# Initiate the values needed and load them into float registers then do the calculation
+# Print the result
+#
 # Start
 
 	.data

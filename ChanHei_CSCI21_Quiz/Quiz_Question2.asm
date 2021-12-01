@@ -3,6 +3,12 @@
 # Nov 27
 # Quiz Question 2
 # Calculate ax^2 + bx + c
+#
+# Description:
+# Get x,a,b,c from user input then convert them into float values
+# Do the calculations with the float registers holding the values 
+# Print the result
+#
 # Start
 	.data
 pr1:	.asciiz	"Calculating ax^2 + bx + c\n"
