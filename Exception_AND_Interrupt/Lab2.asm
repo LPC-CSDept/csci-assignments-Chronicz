@@ -1,39 +1,56 @@
-.data     # Data declaration section    
- msg1:     .asciiz     "  \  n Elapsed Time = "     
- 		
- 		.text     
- main:     # Start of code section     
- 		
-		 li     $a3, 0xffff0000 	# Base address of I/O     
- 		li     $s1, 2     		# 0x00000002     
-		sw     $s1, 0($a3)     	# Enable Keyboard Interrupt ; Receiver Control Register     
+		.kdata     #   kernel data     
+s1:     .word 10     
+s2:     .word 11    
+new_line: .asciiz     "\n"     
+		
 
-		li     $s1, 0x0000ffff 	# Mask to enable all exceptions     
-		mtc0   $s1, $12     	# Store enable bits in Status register  
+		.text     
+		.globl     main     
+main:     
+		mfc0 	$a0, $12     #   read from the status register     
+		ori     $a0,   0xff11     # enable all interrupts     
+		mtc0 	$a0, $12     # write back to the status register     
+		lui     $t0, 0xFFFF     #   $t0 =   0xFFFF0000     
+		ori     $a0, $0, 2     #   enable keyboard interrupt     
+		sw     	$a0, 0($t0)     # write back to 0xFFFF0000;     Receiver Control 
 
-
-		li     $s1, 0     		# Time counter  
-
-
-countdown:     
-		li     $s0, 1000000     # Time Factor     
-
-waitloop:     
- 		addi     $s0, $s0, -1   
-		bnez     $s0, waitloop  # time waste for 1,000,000 instruction time
-
-		li    	 $v0, 4     	# Print message  ; Make a breakpoint here and run  
-		la    	 $a0, msg1     
+here:   j here     #   stay here forever     
+		
+		li 	$v0, 10     #   exit,if     it ever comes here     
 		syscall     
 		
-		addi     $s1, $s1, 5     	 
-		move     $a0, $s1     
-		li     	 $v0, 1     
-		syscall     			# Print amount     
 
-		addi     $t0, $s1, -60     # At the 12th try, exit.
-		bnez     $t0, countdown     
+		# KERNEL text ******************
 		
-		
-		li     	 $v0, 10     
-		syscall
+		.ktext  0x80000180     # kernel code starts here     
+		sw     	$v0, s1     #   We need to use these registers     
+		sw     	$a0, s2     #   not using the stack because the interrupt      
+							# might be triggered by a memory reference      
+							# using a bad value of the stack pointer  
+
+		mfc0 	$k0, $13     	#   Cause register     
+		srl     $a0, $k0, 2     #   Extract   ExcCode     Field     
+		andi    $a0, $a0, 0x1f  #   Get the exception code     
+		bne     $a0, $zero,   kdone     # Exception Code 0 is I/O. Only processing I/O here     
+
+		lui     $v0, 0xFFFF    	#   $v0 =   0xFFFF0000     
+		lw     	$a0, 4($v0)   # 	get the input key     
+		li 		$v0,1     		#   print it here.      
+		syscall     			#   Note: interrupt routine should return very fast,     
+								#   doing something like print is NOT a good practice!     
+		li $v0,4     			#   print the new line     
+		la $a0,   new_line
+		syscall   
+
+kdone:     
+		lw     	$v0, s1     		# Restore other registers     
+		lw     	$a0, s2     
+		mtc0 	$0, $13     	#   Clear Cause register     
+		mfc0 	$k0, $12     	# Set Status register     
+		#andi    $k0, 0xfffd  	# clear EXL bit d = 1101   
+		ori     $k0, 0x11     	#   Interrupts enabled     
+		mtc0 	$k0, $12     	#   write back to status     
+		eret    			 	# return to EPC    
+
+
+
