@@ -39,7 +39,6 @@ print:  move    $a0, $s1            # Print Result
         li  $v0, 1
         syscall
 
-        
-    
-
+        li  $v0, 10
+        syscall
 # End of File
