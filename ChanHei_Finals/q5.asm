@@ -16,7 +16,7 @@ count:  .word   3
     .text
     .globl main
 main:   lw  $t0, count              # Initiate Input Counter
-        ori $t1, $zero, 1
+        ori $t1, $zero, 100
         lui $t2, 0xffff             # Load Receiver Control Register
 poll:   lw  $t3, 0($t2)
         andi    $t3, $t3, 0x0001    # Check if Receiver control Register is ready, ready = 1?
@@ -31,7 +31,7 @@ poll:   lw  $t3, 0($t2)
 
         mul $s0, $s0, $t1           # Move value into the correct digit
         add $s1, $s1, $s0           # Add the current input into total
-        mul $t1, $t1, $t1           # Move to the next digit
+        div $t1, $t1, 10           # Move to the next digit
         b   poll                    # Proceed to next input
         nop
 
