@@ -26,12 +26,12 @@ poll:   lw  $t3, 0($t2)
 
         sub $s0, $s0, 48            # Subtract '0' to get digit in decimals
         sub $t0, $t0, 1             # Subtract Input Counter by 1
-        beq $t0, $zero, print       # When Input Counter = 0, go to print
-        nop
 
         mul $s0, $s0, $t1           # Move value into the correct digit
         add $s1, $s1, $s0           # Add the current input into total
         div $t1, $t1, 10           # Move to the next digit
+        beq $t0, $zero, print       # When Input Counter = 0, go to print
+        nop
         b   poll                    # Proceed to next input
         nop
 
