@@ -53,7 +53,7 @@ loop:   j       loop            # Infinite loop
         nop
 
         lui     $v0, 0xffff     # Access Kernel Space
-        lw      $a0, 4(v0)      # Get input into $a0 with Receiver Control Register at 0xffff0004
+        lw      $a0, 4($v0)      # Get input into $a0 with Receiver Control Register at 0xffff0004
         bne     $a0, 113, print # print input except 'q'
         nop
         li      $v0, 10         # End program when q is entered
