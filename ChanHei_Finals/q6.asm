@@ -30,8 +30,9 @@ main:   mfc0    $a0, $12        # Get Status Register
         ori     $a0, $zero, 2   # Enable Keyboard interrupt
         sw      $a0, 0($t0)     # Return Enable to Receiver Control Register
 
-loop:   j       here            # Infinite loop
-
+loop:   j       loop            # Infinite loop
+        nop
+        
         .ktext  0x80000180      # Kernel text
         sw      $v0, s1         # Kernel Register
         sw      $a0, s2         # Kernel Register
@@ -40,10 +41,22 @@ loop:   j       here            # Infinite loop
         srl     $a0, $k0, 2     # Get ExecuteCode Field
         andi    $a0, $a0, 0x1f  # Get exception ExecuteCode
         bnez    $a0, reset      # Only process I/O when exception code is not 0
+        nop
 
         lui     $v0, 0xffff     # Access Kernel Space
         lw      $a0, 4(v0)      # Get input into $a0 with Receiver Control Register at 0xffff0004
         bne     $a0, 113, print # print input except 'q'
+        nop
+        li      $v0, 10         # End program when q is entered
+        syscall
+
+
+print:  li      $v0, 11         # print character
+        syscall
+        li      $v0, 4          # print string "\n"
+        la      $a0, lf         # Load linefeed into $a0 for syscall
+        syscall
+
     
 reset:  lw  $v0, s1             # Reset $v0
         lw  $a0, s2             # Reset $a0
