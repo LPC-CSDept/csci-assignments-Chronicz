@@ -28,7 +28,6 @@
         .kdata
 s1:     .word 10
 s2:     .word 11
-lf:     .asciiz "\n"
 
         .text
         .globl main
@@ -59,13 +58,8 @@ loop:   j       loop            # Infinite loop
         li      $v0, 10         # End program when q is entered
         syscall
 
-
 print:  li      $v0, 11         # print character
         syscall
-        li      $v0, 4          # print string "\n"
-        la      $a0, lf         # Load linefeed into $a0 for syscall
-        syscall
-
     
 reset:  lw  $v0, s1             # Reset $v0
         lw  $a0, s2             # Reset $a0
