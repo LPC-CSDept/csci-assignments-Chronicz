@@ -28,7 +28,7 @@
         .kdata
 s1:     .word 10
 s2:     .word 11
-lf      .asciiz "\n"
+lf:     .asciiz "\n"
 
         .text
         .globl main
