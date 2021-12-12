@@ -9,12 +9,21 @@
 # Make the interrupt handler(Kernel text program)
 #
 # Elaboration:
+# Enable all interrupts by modifying Status Register
+# Then Enable all keyboard interrupts with Receiver Control Register
+# Set up a infinite loop
+# Get Exception Code and process I/O
+# Get user input with Receiver Data register
+# Print all input except 'q'
+# Reset registers after each input
+# If User enter 'q' then end program
 #
 # Declaration:
 # s1 = 10 -> v0 for kernel text
 # s2 = 11 -> a0 for kernel text
 # lf = linefeed \n
 # $t0 = high order bits 0xffff for accesing kernel space
+#
 # Start
         .kdata
 s1:     .word 10
@@ -32,7 +41,7 @@ main:   mfc0    $a0, $12        # Get Status Register
 
 loop:   j       loop            # Infinite loop
         nop
-        
+
         .ktext  0x80000180      # Kernel text
         sw      $v0, s1         # Kernel Register
         sw      $a0, s2         # Kernel Register
