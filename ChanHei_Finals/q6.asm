@@ -2,6 +2,7 @@
 # Student Name: Chan Hei
 # File Name: q6.asm
 # Start Date: Dec 11(SAT)
+# Finish Date: Dec 11(SAT)
 # CS21 Finals Question 2
 #
 # Decription:

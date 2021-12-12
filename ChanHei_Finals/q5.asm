@@ -2,6 +2,7 @@
 # Student Name: Chan Hei
 # File Name: q5.asm
 # Start Date: Dec 11(SAT)
+# Finish Date: Dec 11(SAT)
 # CS21 Finals Question 1
 #
 # Description:
@@ -15,7 +16,7 @@
 # The Receiver Data Register will read the input into the low order 8 bit of the register
 # 
 # Declaration:
-# $t0 = counter, $t1 = digit holder, $t2 = 0xffff, $t3 = Receiver Control, $s0 = input, s1 = total
+# $t0 = counter, $t1 = digit holder, $t2 = 0  xffff, $t3 = Receiver Control, $s0 = input, s1 = total
 # $t0 = $t0-1 after each input and calculation until 0
 # $t1 = $t1/10 after each input for getting the correct digit place
 # $t2 = Set the high order 16 bit of register to ffff to access kernel space
