@@ -22,7 +22,6 @@
 # Declaration:
 # s1 = 10 -> v0 for kernel text
 # s2 = 11 -> a0 for kernel text
-# lf = linefeed \n
 # $t0 = high order bits 0xffff for accesing kernel space
 #
 # Start
