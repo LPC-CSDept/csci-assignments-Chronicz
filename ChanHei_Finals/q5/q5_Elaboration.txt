@@ -37,7 +37,7 @@ I will also use $s1 to save the total of the sum of three input.
 So it will look like this if the user enter 357:
 
 user enter 3.
-$s0 = 51(asciiz)
+$s0 = 51('3' = 51 in decimal)
 $s0 = $s0 - 48 = 51 - 48 = 3(decimal)
 $t0 = $t0 - 1 = 2
 $s0 = $s0*$t1 = 3*100 = 300
@@ -45,7 +45,7 @@ $t1 = $t1/10 = 100/10 = 10
 $s1 = $s1 + $s0 = 0 + 300 = 300
 
 user enter 5.
-$s0 = 53(asciiz)
+$s0 = 53('5' = 53 in decimal)
 $s0 = $s0 - 48 = 53 - 48 = 5(decimal)
 $t0 = $t0 - 1 = 1
 $s0 = $s0*$t1 = 5*10 = 50
@@ -53,7 +53,7 @@ $t1 = $t1/10 = 10/10 = 1
 $s1 = $s1+$s0 = 300 + 50 = 350
 
 user enter 7.
-$s0 = 55(asciiz)
+$s0 = 55('7 = 55 in decimal)
 $s0 = $s0 - 48 = 55 - 48 = 7(decimal)
 $t0 = $t0 - 1 = 0
 $s0 = $s0*$t1 = 7*1 = 7
