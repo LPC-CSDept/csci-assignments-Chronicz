@@ -56,4 +56,4 @@ to get to 0xffff0004. Now $a0 has the 8 bit character that the user input.
 If it is 'q' then we should end the program, if not we should print it out and reset out registers for another keyboard interruption which is an input from the user.
 So I use a branch to print if not equal to 'q' which is 113 in decimal.
 The print segment will simply print the character the user input by user syscall code 11 in $v0.
-After the print, it will reset the registers for another interruption
+After the print, it will reset the registers for another interruption.
