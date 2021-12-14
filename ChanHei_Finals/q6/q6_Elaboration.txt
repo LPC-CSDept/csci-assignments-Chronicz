@@ -1,0 +1,59 @@
+Elaboration for q6:
+In this program we will take user input and print it in console until 'q' is typed
+In order to do this we will need to make the interrupt handler which is a kernel text program
+
+In this program we need to use registers in the Coprocessor 0 which are register $12 and register $13.
+They are the Status register and the cause register.
+The Status register controls which interrupt are enabled
+The Cause register controls the exception type, and pending interrupts
+
+First of all we need to enable all interrupts and to do that we need to access the Status Register
+mfc0 $a0, $12 will get the status register and store it in $a0 by move the bit pattern of $12 to $a0.
+Then we will enable all interrupts by modifiying the interrupt mask in the status register which is the 8 bit to 15 bit of the register
+We also need to modify LSB to 1 in order to enable interrupts.
+Since user mode is not simulated in SPIM simulator so it's always 1
+According to above, we will use ori instruction to put 0xff11 into status register 12 to
+fill in 1's from 8 bit to 15 bit for all interrupt mask as well as the user mode bit and interrupt enable bit.
+After we are done we need to write the enabled bit pattern back to the status register
+so we will do mtc0 $a0, $12 to move the bit pattern of $a0 to $12
+
+The next step is to enable interrupt for user input and to do that,
+we need to modify the interrupt enable bit in the Receiver Control Register since
+we are using this regsister to get the user input.
+First we load the high order 16 bit 0xffff into $t0 as our base register with lui $t0, 0xffff
+then we create the bit pattern that we wanna return into the Receiver Control Register
+by using ori $a0, $zero, 2, then we store it back into 0xffff0000 by our base register in $t0 add the offset of 0
+
+After that we need an infinite loop until the user enter 'q' so we will just simply 
+use loop: j loop to create an infinite loop.
+
+After we are done enabling the interruption with the status register, we now need to let the processor know
+our exception type and to do that first we store the register we will need to use to reset our values for future interruptions
+we store s1 = 10 and s2 = 10 into $v0, and $a0 since we will need to use them, we are also not using the stack
+because interrupt might be triggered by a memory reference and using a bad value of the stack pointer.
+
+after we store the registers, we will access the cause register by using
+mfc0, $k0, $13 to move the bit pattern of the cause register to a kernel register
+then we will extract the exception code which is the 2 to 8 bit of the register.
+We can extract it by shift right logic twice to move it to the most right bit with srl $a0,, $k0, 2
+we will store the extraction in $a0 then using the andi instruction we will get the execute code.
+Since exception code 0 is the I/O, we will only prccess the I/O when the exception is 0,
+when it is not 0 we will restore other registers and clear out the cause register and Status register then re-enable all the interrupts.
+which is being done in the reset segment of my program.
+
+we use lw $v0, $s1 and lw $v0, $s2 to reset these registers.
+then clear out the cause register by moving $zero into $13 which turns the bit pattern to 0
+then we reset the Status register with $k0 which has our exception code
+then we enable the interrupt again with ori $k0, 0x11 and write it back to the status register with mtc0 $k0, $12
+when we are done, we will return to the Exception Program Counter(EPC) register.
+When an interrupt or exception happens, the address of the current executing instruction is copied form the program counter(PC) to the EPC.
+eret will let us return back to the time when the interrupt happens.
+
+If the exception code is 0, we can do process our I/O,
+First we access the Receiver Control register by using lui $v0, 0xffff
+then we load the input into the receiver Data register by using $v0 which has 0xffff0000 as the base register plus the offset of 4
+to get to 0xffff0004. Now $a0 has the 8 bit character that the user input.
+If it is 'q' then we should end the program, if not we should print it out and reset out registers for another keyboard interruption which is an input from the user.
+So I use a branch to print if not equal to 'q' which is 113 in decimal.
+The print segment will simply print the character the user input by user syscall code 11 in $v0.
+After the print, it will reset the registers for another interruption
