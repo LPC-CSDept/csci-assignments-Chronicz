@@ -1,0 +1,64 @@
+Elaboration for q5:
+In this program we will need to take 3 digit input from the user.
+In order to get input from user, I will use the Receiver Control Register and the Receiver Data Register
+which are Memory Mapped registers located in Kernel level in memory 0xffff0000 and 0xffff0004.
+
+I will declare one variable here called count as a word and give it a value of decimal 3 to keep track
+of the count of user input.
+
+Starting at main I will load the count variable into $t0 to save it temporarily.
+I also put decimal 100 into $t1 for getting the place value of the user input.
+Since the user will enter 3 digits, the first digit will be at 10^2, the second digit will be at 10^1, the last digit will be 10^0.
+
+In order to get input from user, I use lw(Load Word) into $t3 with 0($t2) {Offset+Base Register} which will give me 0xffff0000.
+0xffff0000 is the receiver control register and the only bit that is being used is the LSB and the bit on it's left.
+The LSB is the Ready Bit and the one on it's left is interrupt enable bit.
+Since we are not doing interrupt here, we don't need to modify the interrupt enable bit.
+We will check if the Ready bit is 1 with the andi $t3, $t3, 0x0001 instruction to check if the Ready bit is 1.
+We need to keep waiting until the ready bit is 1, so we are going to use polling here or while-loop structure
+beq $t3, $zero, poll, means when the ready bit is equal to zero then do the andi instruction to check the ready bit again.
+When the ready bit is 1 then it is ready to accept user input,
+lw $s0, 4($t2) means take the asciiz character that the user input and put it in the low order 8 bit in 0xffff0004.
+Then extract the character and load it into $s0.
+
+Now we have the user input, however, it is in asciiz values so we need to subtract the value with
+'0' or 48(decimal) to convert the asciiz value to decimal value.
+Thus, subtract $s0(Where we load the user input from the Receiver Control Register)
+with 48 and put it back in $s0.
+
+Now we have the decimal value but it is not in the right digit.
+so I will multiply the value with $t1 which has the value 100(decimal)
+e.g if the user enter 3 it will be 300 the other two 00 will be the second and last input.
+Since we get the first value in the right place the next input will need to multiply 10 to be in the right digit.
+Thus, $t1 need to be 10, I will use the div instruction to div 100 with 10 to get 10,
+and divide it again in the next input loop to get 1.
+I will also use $s1 to save the total of the sum of three input.
+
+So it will look like this if the user enter 357:
+
+user enter 3.
+$s0 = 51(asciiz)
+$s0 = $s0 - 48 = 51 - 48 = 3(decimal)
+$t0 = $t0 - 1 = 2
+$s0 = $s0*$t1 = 3*100 = 300
+$t1 = $t1/10 = 100/10 = 10
+$s1 = $s1 + $s0 = 0 + 300 = 300
+
+user enter 5.
+$s0 = 53(asciiz)
+$s0 = $s0 - 48 = 53 - 48 = 5(decimal)
+$t0 = $t0 - 1 = 1
+$s0 = $s0*$t1 = 5*10 = 50
+$t1 = $t1/10 = 10/10 = 1
+$s1 = $s1+$s0 = 300 + 50 = 350
+
+user enter 7.
+$s0 = 55(asciiz)
+$s0 = $s0 - 48 = 55 - 48 = 7(decimal)
+$t0 = $t0 - 1 = 0
+$s0 = $s0*$t1 = 7*1 = 7
+$s1 = $s1+$s0 = 350 + 7 = 357
+
+When $t0 is 0, the input count is 0, we don't need any more input so we will branch to print when $t0 = $zer0
+we move $s1 into $a0 the argument register for syscall and load immediate 1 into $v0 and syscall.
+print the digit then load immediate 10 into $v0 and syscall to end the program.

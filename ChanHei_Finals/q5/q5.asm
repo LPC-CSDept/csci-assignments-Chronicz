@@ -44,9 +44,9 @@ poll:   lw  $t3, 0($t2)
 
         mul $s0, $s0, $t1           # Move value into the correct digit
         add $s1, $s1, $s0           # Add the current input into total
-        div $t1, $t1, 10            # Move to the next digit
         beq $t0, $zero, print       # When Input Counter = 0, go to print
         nop
+        div $t1, $t1, 10            # Move to the next digit
         b   poll                    # Proceed to next input
         nop
 
