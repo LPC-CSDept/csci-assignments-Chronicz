@@ -1,11 +1,14 @@
 Elaboration for q5:
+==============================================================================================================================================================================
+#Introduction:
 In this program we will need to take 3 digit input from the user.
 In order to get input from user, I will use the Receiver Control Register and the Receiver Data Register
 which are Memory Mapped registers located in Kernel level in memory 0xffff0000 and 0xffff0004.
 
 I will declare one variable here called count as a word and give it a value of decimal 3 to keep track
 of the count of user input.
-
+==============================================================================================================================================================================
+#Logics of Instructions in Main
 Starting at main I will load the count variable into $t0 to save it temporarily.
 I also put decimal 100 into $t1 for getting the place value of the user input.
 Since the user will enter 3 digits, the first digit will be at 10^2, the second digit will be at 10^1, the last digit will be 10^0.
@@ -34,6 +37,12 @@ Thus, $t1 need to be 10, I will use the div instruction to div 100 with 10 to ge
 and divide it again in the next input loop to get 1.
 I will also use $s1 to save the total of the sum of three input.
 
+When $t0 is 0, the input count is 0, we don't need any more input so we will branch to print when $t0 = $zer0
+we move $s1 into $a0 the argument register for syscall and load immediate 1 into $v0 and syscall.
+print the digit then load immediate 10 into $v0 and syscall to end the program.
+
+==============================================================================================================================================================================
+#Abstractional Expression
 So it will look like this if the user enter 357:
 
 user enter 3.
@@ -58,7 +67,4 @@ $s0 = $s0 - 48 = 55 - 48 = 7(decimal)
 $t0 = $t0 - 1 = 0
 $s0 = $s0*$t1 = 7*1 = 7
 $s1 = $s1+$s0 = 350 + 7 = 357
-
-When $t0 is 0, the input count is 0, we don't need any more input so we will branch to print when $t0 = $zer0
-we move $s1 into $a0 the argument register for syscall and load immediate 1 into $v0 and syscall.
-print the digit then load immediate 10 into $v0 and syscall to end the program.
+==============================================================================================================================================================================

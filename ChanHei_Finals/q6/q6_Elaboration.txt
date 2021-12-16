@@ -1,4 +1,7 @@
 Elaboration for q6:
+
+==============================================================================================================================================================================
+#Introduction:
 In this program we will take user input and print it in console until 'q' is typed
 In order to do this we will need to make the interrupt handler which is a kernel text program
 
@@ -6,7 +9,8 @@ In this program we need to use registers in the Coprocessor 0 which are register
 They are the Status register and the cause register.
 The Status register controls which interrupt are enabled
 The Cause register controls the exception type, and pending interrupts
-
+==============================================================================================================================================================================
+#Logics of Instructions in main
 First of all we need to enable all interrupts and to do that we need to access the Status Register
 mfc0 $a0, $12 will get the status register and store it in $a0 by move the bit pattern of $12 to $a0.
 Then we will enable all interrupts by modifiying the interrupt mask in the status register which is the 8 bit to 15 bit of the register
@@ -26,7 +30,8 @@ by using ori $a0, $zero, 2, then we store it back into 0xffff0000 by our base re
 
 After that we need an infinite loop until the user enter 'q' so we will just simply 
 use loop: j loop to create an infinite loop.
-
+==============================================================================================================================================================================
+#Logics of Instructions in Kernel text
 After we are done enabling the interruption with the status register, we now need to let the processor know
 our exception type and to do that first we store the register we will need to use to reset our values for future interruptions
 we store s1 = 10 and s2 = 10 into $v0, and $a0 since we will need to use them, we are also not using the stack
@@ -57,3 +62,4 @@ If it is 'q' then we should end the program, if not we should print it out and r
 So I use a branch to print if not equal to 'q' which is 113 in decimal.
 The print segment will simply print the character the user input by user syscall code 11 in $v0.
 After the print, it will reset the registers for another interruption.
+==============================================================================================================================================================================
