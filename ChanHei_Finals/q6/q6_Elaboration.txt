@@ -1,5 +1,4 @@
 Elaboration for q6:
-
 ==============================================================================================================================================================================
 #Introduction:
 In this program we will take user input and print it in console until 'q' is typed
